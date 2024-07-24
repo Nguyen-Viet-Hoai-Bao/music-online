@@ -1,0 +1,53 @@
+{
+  "error": {
+      "title": "Lỗi",
+      "message": "Oops! Đã xảy ra lỗi.",
+      "invalidGenreId": "ID thể loại không hợp lệ.",
+      "genreNotFound": "Không tìm thấy thể loại.",
+      "genreExists": "Tên thể loại đã tồn tại.",
+      "genreNameMinLength": "Tên thể loại phải có ít nhất 3 ký tự.",
+      "authorNameMinLength": "Tên tác giả phải có ít nhất 3 ký tự.",
+      "authorExists": "Tác giả đã tồn tại.",
+      "bookNameMinLength": "Tên sách phải có ít nhất 1 ký tự.",
+      "bookExists": "Sách đã tồn tại.",
+      "failedToFetchAuthors": "Lỗi khi tải danh sách tác giả.",
+      "failedToFetchBooks": "Lỗi khi tải danh sách sách.",
+      "failedToFetchBookInstances": "Lỗi khi tải danh sách bản sao sách.",
+      "failedToFetchGenres": "Lỗi khi tải danh sách thể loại.",
+      "invalidAuthorId": "ID tác giả không hợp lệ.",
+      "authorNotFound": "Không tìm thấy tác giả.",
+      "invalidBookId": "ID sách không hợp lệ.",
+      "bookNotFound": "Không tìm thấy sách.",
+      "invalidBookInstanceId": "ID bản sao sách không hợp lệ.",
+      "bookInstanceNotFound": "Không tìm thấy bản sao sách.",
+      "deleteFail": "Xóa thất bại",
+      "updateFail": "Cập nhật thất bại",
+      "createFail": "Tạo thất bại"
+  },
+  "error_messages": {
+  },
+  "home": {
+  },
+  "sidebar": {
+      "english": "Tiếng Anh",
+      "vietnamese": "Tiếng Việt"
+  },
+  "list": {
+  },
+  "notlist": {
+  },
+  "detail": {
+  },
+  "create": {
+  },
+  "author": {
+  },
+  "book": {
+  },
+  "bookinstance": {
+  },
+  "authorDetail": {
+  },
+  "update_book_form": { 
+  }
+}

@@ -1,13 +1,17 @@
-import './pre-start'; // Must be the first import
-import logger from 'jet-logger';
+import express from 'express';
+import path from 'path';
+import indexRouter from './routes/index';
 
-import EnvVars from '@src/common/EnvVars';
-import server from './server';
+const app = express();
+const port = process.env.PORT || 3000;
 
+app.use(express.static(path.join(__dirname, 'public')));
 
-// **** Run **** //
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-const SERVER_START_MSG = ('Express server started on port: ' + 
-  EnvVars.Port.toString());
+app.use('/', indexRouter);
 
-server.listen(EnvVars.Port, () => logger.info(SERVER_START_MSG));
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
