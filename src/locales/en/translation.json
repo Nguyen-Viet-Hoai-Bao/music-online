@@ -1,0 +1,53 @@
+{
+  "error": {
+      "title": "Error",
+      "message": "Oops! Something went wrong.",
+      "invalidGenreId": "Invalid genre ID parameter.",
+      "genreNotFound": "Genre not found.",
+      "genreExists": "Genre name already exists.",
+      "genreNameMinLength": "Genre name must be at least 3 characters long.",
+      "authorNameMinLength": "Author name must be at least 3 characters long.",
+      "authorExists": "Author already exists.",
+      "bookNameMinLength": "Book name must be at least 1 character long.",
+      "bookExists": "Book already exists.",
+      "failedToFetchAuthors": "Failed to fetch authors.",
+      "failedToFetchBooks": "Failed to fetch books.",
+      "failedToFetchBookInstances": "Failed to fetch book instances.",
+      "failedToFetchGenres": "Failed to fetch genres.",
+      "invalidAuthorId": "Invalid author ID parameter",
+      "authorNotFound": "Author not found",
+      "invalidBookId": "Invalid book ID parameter",
+      "bookNotFound": "Book not found",
+      "invalidBookInstanceId": "Invalid book instance ID parameter",
+      "bookInstanceNotFound": "Book instance not found",
+      "deleteFail": "Delete Fail",
+      "updateFail": "Update Fail",
+      "createFail": "Creare Fail"
+  },
+  "error_messages": {
+  },
+  "home": {
+  },
+  "sidebar": {
+      "english": "English",
+      "vietnamese": "Vietnamese"
+  },
+  "list": {
+  },
+  "notlist": {
+  },
+  "detail": {
+  },
+  "create": {
+  },
+  "author": {
+  },
+  "book": {
+  },
+  "bookinstance": {
+  },
+  "authorDetail": {
+  },
+  "update_book_form": {
+  }
+}
