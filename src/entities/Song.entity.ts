@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, OneToOne, BaseEntity } from 'typeorm';
 import { Album } from './Album.entity';
 import { Comment } from './Comment.entity';
 import { Genre } from './Genre.entity';
@@ -9,7 +9,7 @@ import { SuggestedSong } from './SuggestedSong.entity';
 import { SongStatus } from '../enums/SongStatus.enum';
 
 @Entity()
-export class Song {
+export class Song extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -62,4 +62,39 @@ export class Song {
 
   @OneToOne(() => SuggestedSong, suggestedSong => suggestedSong.song)
   suggestedSong?: SuggestedSong;
+
+  constructor(data?: Partial<Song>){
+    super();
+    if(data){
+      Object.assign(this, data);
+    }
+  }
+
+  getTitle(): string {
+    return this.title;
+  }
+
+  getArtist(): string {
+    return this.artist;
+  }
+
+  getLyrics(): string {
+    return this.lyrics;
+  }
+
+  getUrl(): string {
+    return this.url;
+  }
+
+  getStatus(): SongStatus {
+    return this.status;
+  }
+
+  getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  getUpdatedAt(): Date {
+    return this.updatedAt;
+  }
 }

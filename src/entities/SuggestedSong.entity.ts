@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToOne, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToOne, Column, BaseEntity } from 'typeorm';
 import { User } from './User.entity';
 import { Song } from './Song.entity';
 import { SuggestionStatus } from '../enums/SuggestionStatus.enum';
 
 @Entity()
-export class SuggestedSong {
+export class SuggestedSong extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -29,4 +29,27 @@ export class SuggestedSong {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  constructor(data?: Partial<SuggestedSong>){
+    super();
+    if(data){
+      Object.assign(this, data);
+    }
+  }
+
+  getStatus(): SuggestionStatus {
+    return this.status;
+  }
+
+  getRejectionReason(): string | undefined {
+    return this.rejection_reason;
+  }
+
+  getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  getUpdatedAt(): Date {
+    return this.updatedAt;
+  }
 }

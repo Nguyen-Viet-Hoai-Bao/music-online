@@ -1,9 +1,10 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import authorRoutes from './Author.routes';
+import genreRoutes from './Genre.routes';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-    res.render('index', { message: 'Hello, World!' });
-});
+router.use("/authors", authorRoutes);
+router.use("/genres", genreRoutes);
 
 export default router;
