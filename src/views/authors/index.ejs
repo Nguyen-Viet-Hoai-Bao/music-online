@@ -23,13 +23,16 @@
                         <div>
                             <a href="/authors/<%= author.id %>" class="text-decoration-none text-dark">
                               <h5 class="mb-1"><%= author.fullname %></h5>
-                            </a>  
+                            </a>
                             <small>Date of Birth: <%= new Date(author.dateOfBirth).toDateString() %></small>
                         </div>
                     </div>
                 </li>
             <% }); %>
         </ul>
+        <div class="mt-4">
+            <a href="/authors/create" class="btn btn-success">Create New Author</a>
+        </div>
     </div>
     <script src="/jquery/jquery.min.js"></script>
     <script src="/popper/popper.min.js"></script>

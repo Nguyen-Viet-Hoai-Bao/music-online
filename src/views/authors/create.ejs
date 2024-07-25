@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Author</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <h1>Create Author</h1>
+  <form action="/authors/create" method="post" enctype="multipart/form-data">
+    <div>
+      <label for="fullname">Full Name</label>
+      <input id="fullname" type="text" name="fullname" required>
+    </div>
+    <div>
+      <label for="avatar">Avatar</label>
+      <input id="avatar" type="file" name="avatar">
+    </div>
+    <div>
+      <label for="dateOfBirth">Date of Birth</label>
+      <input id="dateOfBirth" type="date" name="dateOfBirth" required>
+    </div>
+    <div>
+      <button type="submit">Create Author</button>
+    </div>
+  </form>
+</body>
+</html>

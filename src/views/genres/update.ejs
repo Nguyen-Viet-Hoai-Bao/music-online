@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Genre</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <h1>Update Genre</h1>
+  <form action="/genres/update/<%= genre.id %>" method="post">
+    <div>
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" value="<%= genre.name %>" required>
+    </div>
+    <div>
+      <button type="submit">Update Genre</button>
+    </div>
+  </form>
+</body>
+</html>

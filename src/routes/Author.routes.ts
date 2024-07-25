@@ -1,20 +1,20 @@
 import {Router} from 'express';
-import { authorList, authorDetail, authorCreateGet, authorCreatePost, authorDeletePost, authorDeleteGet, authorUpdate } from '../controllers/Author.controller';
+import { list, createGet, deleteGet, updatePost, detail, createPost, deletePost, updateGet, validateAndFetchAuthor } from '../controllers/Author.controller';
+import { uploadAvatar } from './middlewares/multer.config'
 
 const router = Router();
 
-router.get('/', authorList);
+router.get('/', list);
 
-router.get('/create', authorCreateGet);
+router.get('/create', createGet);
+router.post('/create', uploadAvatar, createPost);
 
-router.get('/:id', authorDetail);
+router.get('/delete/:id', validateAndFetchAuthor, deleteGet);
+router.post('/delete/:id', deletePost);
 
-router.post('/createPost', authorCreatePost);
+router.get('/update/:id', validateAndFetchAuthor, updateGet);
+router.post('/update/:id', uploadAvatar, updatePost);
 
-router.post('/delete/deletePost', authorDeletePost);
-
-router.post('/delete/:id', authorDeleteGet);
-
-router.post('/update/:id', authorUpdate);
+router.get('/:id', validateAndFetchAuthor, detail);
 
 export default router;

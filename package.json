@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "build": "npx ts-node build.ts",
-    "lint": "npx eslint --ext .ts src/",
     "lint:tests": "npx eslint --ext .ts spec/",
     "start": "node -r module-alias/register ./dist --env=production",
     "dev": "nodemon",
@@ -13,7 +12,8 @@
     "migration:generate": "npm run typeorm -- -d ./src/config/data-source.ts migration:generate ./src/config/migrations/newMigration",
     "migration:run": "npm run typeorm migration:run -- -d ./src/config/data-source.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d ./src/config/data-source.ts",
-    "migration:auto": "npm run migration:generate -- -n InitDatabase && npm run migration:run"
+    "migration:auto": "npm run migration:generate -- -n InitDatabase && npm run migration:run",
+    "lint": "npx eslint src/**/*.ts"
   },
   "nodemonConfig": {
     "watch": [
@@ -42,6 +42,8 @@
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
+    "firebase": "^10.12.4",
+    "firebase-admin": "^12.2.0",
     "fs-extra": "^11.2.0",
     "i18next": "^23.12.2",
     "i18next-fs-backend": "^2.3.1",
@@ -53,6 +55,7 @@
     "misc": "^1.0.2",
     "module-alias": "^2.2.3",
     "moment": "^2.30.1",
+    "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
     "popper.js": "^1.16.1",
@@ -67,6 +70,7 @@
     "@types/i18next-node-fs-backend": "^2.1.5",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/moment": "^2.13.0",
+    "@types/multer": "^1.4.11",
     "@types/node": "^20.14.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"

@@ -15,36 +15,46 @@ export const getAuthors = async () => {
   return  authorRepository.find();
 };
 
+export const createAuthor = async (data: Partial<Author>) => {
+  try {
+    const author = new Author(data);
+    await author.save();
+    return author;
+  } catch (error) {
+    throw new Error('Error creating author');
+  }
+};
+
 export const getAuthorById = async (authorId: number) => {
-  return await authorRepository.findOne({ where: { id: authorId }, relations: ['books'] });
+  try {
+    return await Author.findOne({ where: { id: authorId }, relations: ['songs', 'albums'] });
+  } catch (error) {
+    throw new Error('Error fetching author');
+  }
 };
 
-export async function createAuthor(authorInput: any): Promise<Author> {
-  const { fullname, avatar, dateOfBirth } = authorInput;
-  
-  const newAuthor = authorRepository.create({
-    fullname,
-    avatar,
-    dateOfBirth
-  });
-  
-  return await authorRepository.save(newAuthor);
-}
-
-export const deleteAuthor = async (id: number) => {
-  const author = await getAuthorById(id);
-  if (author) {
-      await authorRepository.remove(author);
-      return true;
+export const updateAuthor = async (authorId: number, data: Partial<Author>) => {
+  try {
+    const author = await Author.findOne({ where: { id: authorId } });
+    if (!author) {
+      throw new Error('Author not found');
+    }
+    Object.assign(author, data);
+    await author.save();
+    return author;
+  } catch (error) {
+    throw new Error('Error updating author');
   }
-  return false;
 };
 
-export const updateAuthor = async (id: number, authorData: Partial<Author>) => {
-  const author = await getAuthorById(id);
-  if (author) {
-      Object.assign(author, authorData);
-      return await authorRepository.save(author);
+export const deleteAuthor = async (authorId: number) => {
+  try {
+    const author = await Author.findOne({ where: { id: authorId } });
+    if (!author) {
+      throw new Error('Author not found');
+    }
+    await author.remove();
+  } catch (error) {
+    throw new Error('Error deleting author');
   }
-  return null;
 };
