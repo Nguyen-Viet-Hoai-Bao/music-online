@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
 import { Playlist } from './Playlist.entity';
 import { Song } from './Song.entity';
 import { Comment } from './Comment.entity';
@@ -6,7 +6,7 @@ import { SuggestedSong } from './SuggestedSong.entity';
 import { UserRoles } from '../enums/UserRoles.enum';
 
 @Entity()
-export class User {
+export class User extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -48,4 +48,31 @@ export class User {
 
   @OneToMany(() => SuggestedSong, suggestedSong => suggestedSong.user)
   suggestedSongs!: SuggestedSong[];
+
+  constructor(data?: Partial<User>){
+    super();
+    if(data){
+      Object.assign(this, data);
+    }
+  }
+
+  getUsername(): string {
+    return this.username;
+  }
+
+  getEmail(): string {
+    return this.email;
+  }
+
+  getPassword(): string {
+    return this.password;
+  }
+
+  getDateOfBirth(): Date {
+    return this.dateOfBirth;
+  }
+
+  getRole(): UserRoles {
+    return this.role;
+  }
 }

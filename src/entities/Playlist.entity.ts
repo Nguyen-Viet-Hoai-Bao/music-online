@@ -1,15 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, CreateDateColumn, BaseEntity } from 'typeorm';
 import { Song } from './Song.entity';
 import { User } from './User.entity';
 import { PlaylistTypes } from '../enums/PlaylistTypes.enum';
 
 @Entity()
-export class Playlist {
+export class Playlist extends BaseEntity{
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column({ nullable: false })
   title!: string;
+
+  @Column()
+  avatar!: string;
 
   @Column({
     type: 'enum',
@@ -27,4 +30,23 @@ export class Playlist {
 
   @ManyToMany(() => User, user => user.playlists)
   users!: User[];
+
+  constructor(data?: Partial<Playlist>){
+    super();
+    if(data){
+      Object.assign(this, data);
+    }
+  }
+
+  getTitle(): string {
+    return this.title;
+  }
+
+  getType(): PlaylistTypes {
+    return this.type;
+  }
+
+  getCreatedAt(): Date {
+    return this.createdAt;
+  }
 }
