@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1= title
+    form(action=`/musics/${song.id}?_method=PUT` method='POST' enctype='multipart/form-data')
+      div.form-group
+        label(for='title') Tiêu Đề
+        input(type='text' id='title' name='title' class='form-control' value=song.title required)
+      div.form-group
+        label(for='artist') Nghệ Sĩ
+        input(type='text' id='artist' name='artist' class='form-control' value=song.artist required)
+      div.form-group
+        label(for='lyrics') Lời Bài Hát
+        textarea(id='lyrics' name='lyrics' class='form-control' required)= song.lyrics
+      div.form-group
+        label(for='status') Trạng Thái
+        input(type='text' id='status' name='status' class='form-control' value=song.status required)
+      div.form-group
+        label(for='file') Tệp Nhạc
+        input(type='file' id='file' name='file' class='form-control')
+      button(type='submit' class='btn btn-primary') Cập Nhật Nhạc
+      a(href=`/musics/${song.id}` class='btn btn-secondary') Quay lại chi tiết

@@ -1,0 +1,114 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Music Streaming
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+    style.
+      body {
+          background-color: #121212;
+          color: #e5e5e5;
+          font-family: 'Arial', sans-serif;
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+          margin: 0;
+      }
+      .navbar {
+          background-color: #1db954;
+          width: 100%;
+          padding: 0.5rem 1rem;
+      }
+      .navbar-brand, .btn-login {
+          color: #fff;
+      }
+      .btn-login {
+          margin-left: auto;
+      }
+      .main-content {
+          display: flex;
+          flex: 1;
+          overflow: hidden;
+      }
+      .sidebar {
+          background-color: #1db954;
+          width: 200px;
+          height: 100%;
+          padding-top: 20px;
+          display: flex;
+          flex-direction: column;
+      }
+      .sidebar a {
+          color: #fff;
+          padding: 10px 15px;
+          text-align: left;
+          text-decoration: none;
+          display: block;
+      }
+      .sidebar a:hover {
+          background-color: #1ed760;
+      }
+      .content {
+          flex: 1;
+          padding: 20px;
+          overflow-y: auto;
+      }
+      .card {
+          background-color: #282828;
+          border: none;
+          border-radius: 8px;
+      }
+      .card img {
+          border-radius: 8px;
+      }
+      .card-body {
+          color: #b3b3b3;
+      }
+      .card-title {
+          color: #fff;
+      }
+      .btn-primary {
+          background-color: #1db954;
+          border: none;
+      }
+      .btn-primary:hover {
+          background-color: #1ed760;
+      }
+
+  body
+    nav.navbar.navbar-dark
+      a.navbar-brand(href="#") Music Streaming
+      button.btn.btn-login(type="button") Login
+
+    .main-content
+      .sidebar
+        ul.nav.flex-column
+          li.nav-item.active
+            a.nav-link(href="#") Home
+              span.sr-only (current)
+          li.nav-item
+            a.nav-link(href="/authors") Authors
+          li.nav-item
+            a.nav-link(href="/genres") Genres
+          li.nav-item
+            a.nav-link(href="/songs") Songs
+          li.nav-item
+            a.nav-link(href="#") Library
+
+      .content
+        .container
+          h1.text-center.mb-4 Discover New Music
+          .row
+            each track in tracks
+              .col-md-4.mb-4
+                .card
+                  img.card-img-top(src=track.image, alt=track.title)
+                  .card-body
+                    h5.card-title= track.title
+                    p.card-text Artist: #{track.artist}
+                    a.btn.btn-primary(href="#") Play
+
+    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")

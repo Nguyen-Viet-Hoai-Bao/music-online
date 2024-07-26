@@ -5,39 +5,27 @@ import { Album } from './Album.entity';
 @Entity()
 export class Author extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ nullable: false })
-  fullname!: string;
+  fullname: string;
 
   @Column()
-  avatar!: string;
+  avatar: string;
 
   @Column()
-  dateOfBirth!: Date;
+  dateOfBirth: Date;
 
   @OneToMany(() => Song, song => song.author)
-  songs!: Song[];
+  songs: Song[];
 
   @OneToMany(() => Album, album => album.author)
-  albums!: Album[];
+  albums: Album[];
 
   constructor(data?: Partial<Author>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getFullname(): string {
-    return this.fullname;
-  }
-
-  getAvatar(): string {
-    return this.avatar;
-  }
-
-  getDateOfBirth(): Date {
-    return this.dateOfBirth;
   }
 }

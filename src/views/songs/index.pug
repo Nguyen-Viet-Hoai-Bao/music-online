@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1= title
+    a(href='/musics/create' class='btn btn-primary') Thêm Nhạc Mới
+    .container
+      h1.text-center.mb-4 List of Songs
+      .row
+        each song in songs
+          .col-md-4.mb-4
+            .card
+              if song.imageUrl
+                img.card-img-top(src=song.imageUrl, alt=song.title)
+              else
+                .bg-secondary.text-white.text-center.d-flex.align-items-center.justify-content-center(style='width: 100%; height: 300px;')
+                  | No Image
+              .card-body
+                h5.card-title= song.title
+                p.card-text Artist: #{song.artist}
+                p.card-text Ngày Cập Nhật: #{song.updatedAt.toDateString()}
+                a.btn.btn-primary(href=`/musics/${song.id}`) View Details
+
+            

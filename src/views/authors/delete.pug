@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1 Delete Author
+    p Are you sure you want to delete the author: #{author.fullname}?
+    form(action=`/authors/delete/${author.id}`, method='post')
+      button.btn.btn-danger(type='submit') Delete
+      a.btn.btn-secondary(href='/authors') Cancel

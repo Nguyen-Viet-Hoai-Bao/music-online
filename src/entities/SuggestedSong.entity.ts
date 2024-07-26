@@ -6,13 +6,13 @@ import { SuggestionStatus } from '../enums/SuggestionStatus.enum';
 @Entity()
 export class SuggestedSong extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @ManyToOne(() => User, user => user.suggestedSongs)
-  user!: User;
+  user: User;
 
   @OneToOne(() => Song, song => song.suggestedSong)
-  song!: Song;
+  song: Song;
 
   @Column('text', { nullable: true })
   rejection_reason?: string; 
@@ -22,34 +22,18 @@ export class SuggestedSong extends BaseEntity{
     enum: SuggestionStatus,
     default: SuggestionStatus.PENDING,
   })
-  status!: SuggestionStatus; 
+  status: SuggestionStatus; 
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt: Date;
 
   constructor(data?: Partial<SuggestedSong>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getStatus(): SuggestionStatus {
-    return this.status;
-  }
-
-  getRejectionReason(): string | undefined {
-    return this.rejection_reason;
-  }
-
-  getCreatedAt(): Date {
-    return this.createdAt;
-  }
-
-  getUpdatedAt(): Date {
-    return this.updatedAt;
   }
 }

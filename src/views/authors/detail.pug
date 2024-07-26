@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1.my-4= author.fullname
+    .row
+      .col-md-4
+        if author.avatar
+          img(src=author.avatar, alt=author.fullname, class='img-fluid rounded')
+        else
+          .bg-secondary.text-white.text-center.d-flex.align-items-center.justify-content-center(style='width: 100%; height: 300px;')
+            | No Image
+      .col-md-8
+        p
+          strong Date of Birth:
+          | #{new Date(author.dateOfBirth).toDateString()}
+        p
+          strong Biography:
+          | #{author.biography}
+    .mt-4
+      a.btn.btn-primary(href=`/authors/update/${author.id}`) Edit
+      a.btn.btn-danger(href=`/authors/delete/${author.id}`) Delete
+      a.btn.btn-success(href='/authors') Author List
