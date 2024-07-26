@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1= title
+    ul.list-group
+      li.list-group-item
+        h4 Tiêu Đề: #{song.title}
+      li.list-group-item
+        h4 Nghệ Sĩ: #{song.artist}
+      li.list-group-item
+        h4 Lời Bài Hát: 
+        p #{song.lyrics}
+      if song.url
+        li.list-group-item
+          h4 Tệp Nhạc:
+          a(href=song.url class='btn btn-success') Tải về
+    div
+      a(href=`/musics/update/${song.id}` class='btn btn-warning btn-sm') Sửa
+      a(href=`/musics/delete/${song.id}` class='btn btn-danger btn-sm') Xóa
+      a(href='/musics' class='btn btn-secondary') Quay lại danh sách

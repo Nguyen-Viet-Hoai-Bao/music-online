@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1 Create Author
+    form(action='/authors/create', method='post', enctype='multipart/form-data')
+      div.form-group
+        label(for='fullname') Full Name
+        input.form-control(id='fullname', type='text', name='fullname', required)
+      div.form-group
+        label(for='avatar') Avatar
+        input.form-control-file(id='avatar', type='file', name='avatar')
+      div.form-group
+        label(for='dateOfBirth') Date of Birth
+        input.form-control(id='dateOfBirth', type='date', name='dateOfBirth', required)
+      div
+        button.btn.btn-primary(type='submit') Create Author

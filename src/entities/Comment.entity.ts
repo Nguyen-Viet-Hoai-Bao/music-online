@@ -5,32 +5,24 @@ import { User } from './User.entity';
 @Entity()
 export class Comment extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column('text', { nullable: false })
-  content!: string;
+  content: string;
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @ManyToOne(() => Song, song => song.comment)
-  song!: Song;
+  song: Song;
 
   @ManyToOne(() => User, user => user.comments)
-  user!: User;
+  user: User;
 
   constructor(data?: Partial<Comment>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getContent(): string {
-    return this.content;
-  }
-
-  getCreatedAt(): Date {
-    return this.createdAt;
   }
 }

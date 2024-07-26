@@ -1,30 +1,52 @@
+import { AppDataSource } from '../config/data-source';
 import { Genre } from '../entities/Genre.entity';
 
-export class GenreService {
-  async getAllGenres(): Promise<Genre[]> {
-    return Genre.find();
-  }
+const genreRepository = AppDataSource.getRepository(Genre);
 
-  async getGenreById(id: number): Promise<Genre | null> {
-    return Genre.findOneBy({ id });
-  }
+export const getGenres = async () => {
+  return genreRepository.find();
+};
 
-  async createGenre(data: Partial<Genre>): Promise<Genre> {
+export const createGenre = async (data: Partial<Genre>) => {
+  try {
     const genre = new Genre(data);
-    return genre.save();
+    await genre.save();
+    return genre;
+  } catch (error) {
+    throw new Error('Error creating genre');
   }
+};
 
-  async updateGenre(id: number, data: Partial<Genre>): Promise<Genre | null> {
-    const genre = await Genre.findOneBy({ id });
-    if (genre) {
-      Object.assign(genre, data);
-      return genre.save();
+export const getGenreById = async (genreId: number) => {
+  try {
+    return await genreRepository.findOne({ where: { id: genreId }, relations: ['songs'] });
+  } catch (error) {
+    throw new Error('Error fetching genre');
+  }
+};
+
+export const updateGenre = async (genreId: number, data: Partial<Genre>) => {
+  try {
+    const genre = await genreRepository.findOne({ where: { id: genreId } });
+    if (!genre) {
+      throw new Error('Genre not found');
     }
-    return null;
+    Object.assign(genre, data);
+    await genre.save();
+    return genre;
+  } catch (error) {
+    throw new Error('Error updating genre');
   }
+};
 
-  async deleteGenre(id: number): Promise<boolean> {
-    const result = await Genre.delete({ id });
-    return result.affected !== 0;
+export const deleteGenre = async (genreId: number) => {
+  try {
+    const genre = await genreRepository.findOne({ where: { id: genreId } });
+    if (!genre) {
+      throw new Error('Genre not found');
+    }
+    await genre.remove();
+  } catch (error) {
+    throw new Error('Error deleting genre');
   }
-}
+};

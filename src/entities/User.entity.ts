@@ -8,71 +8,51 @@ import { UserRoles } from '../enums/UserRoles.enum';
 @Entity()
 export class User extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ nullable: false })
-  username!: string;
+  username: string;
 
   @Column({ nullable: false })
-  email!: string;
+  email: string;
 
   @Column({ nullable: false })
-  password!: string;
+  password: string;
 
   @Column()
-  dateOfBirth!: Date;
+  dateOfBirth: Date;
 
   @Column({
     type: 'enum',
     enum: UserRoles,
     default: UserRoles.Guess, 
   })
-  role!: UserRoles;
+  role: UserRoles;
 
   @CreateDateColumn()
-  createdAt!: Date; 
+  createdAt: Date; 
 
   @UpdateDateColumn()
-  updatedAt!: Date; 
+  updatedAt: Date; 
 
   @ManyToMany(() => Playlist, playlist => playlist.users)
   @JoinTable()
-  playlists!: Playlist[];
+  playlists: Playlist[];
 
   @ManyToMany(() => Song, song => song.favoritedBy)
   @JoinTable()
-  favoriteSongs!: Song[];
+  favoriteSongs: Song[];
 
   @OneToMany(() => Comment, comment => comment.user)
-  comments!: Comment[];
+  comments: Comment[];
 
   @OneToMany(() => SuggestedSong, suggestedSong => suggestedSong.user)
-  suggestedSongs!: SuggestedSong[];
+  suggestedSongs: SuggestedSong[];
 
   constructor(data?: Partial<User>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getUsername(): string {
-    return this.username;
-  }
-
-  getEmail(): string {
-    return this.email;
-  }
-
-  getPassword(): string {
-    return this.password;
-  }
-
-  getDateOfBirth(): Date {
-    return this.dateOfBirth;
-  }
-
-  getRole(): UserRoles {
-    return this.role;
   }
 }

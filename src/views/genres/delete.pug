@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1 Delete Genre
+    p Are you sure you want to delete the genre: #{genre.name}?
+    form(action=`/genres/delete/${genre.id}`, method='post')
+      button.btn.btn-danger(type='submit') Delete
+      a.btn.btn-secondary(href='/genres') Cancel

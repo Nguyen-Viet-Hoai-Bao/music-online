@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
-import { createAuthor, deleteAuthor, getAuthorById, getAuthors } from '../services/Author.service';
-import { body, validationResult } from "express-validator";
+import { createAuthor, deleteAuthor, getAuthorById, getAuthors, updateAuthor } from '../services/Author.service';
+import { uploadFileToFirebase } from '../utils/fileUpload.util';
 
-async function validateAndFetchAuthor(req: Request, res: Response, next: NextFunction) {
+export async function validateAndFetchAuthor(req: Request, res: Response, next: NextFunction) {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
         req.flash('error_msg', req.t('notlist.invalidAuthorId'));
@@ -14,10 +14,11 @@ async function validateAndFetchAuthor(req: Request, res: Response, next: NextFun
         req.flash('error_msg', req.t('notlist.authorNotFound'));
         return res.redirect('/error');
     }
-    return author;
+    (req as any).author = author;
+    next();
 }
 
-export const authorList = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const list = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authors = await getAuthors();
         res.render('authors/index', { authors, title: 'List Author' });
@@ -27,89 +28,93 @@ export const authorList = asyncHandler(async (req: Request, res: Response, next:
     }
 });
 
-export const authorDetail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const tracks = [
-    { title: 'Track 1', artist: 'Artist 1', image: 'https://via.placeholder.com/150' },
-    { title: 'Track 2', artist: 'Artist 2', image: 'https://via.placeholder.com/150' },
-    { title: 'Track 3', artist: 'Artist 3', image: 'https://via.placeholder.com/150' }
-];
-res.render('index', { tracks });
+export const detail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const author = (req as any).author;
+        res.render('authors/detail', { author, title: 'Author Detail' });
+    } catch (error) {
+        req.flash('error_msg', 'notlist.failedToFetchAuthor');
+        res.redirect('/error');
+    }
 });
 
-export const authorCreateGet = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    res.render('authors/form', { title: req.t('create.author') })
-})
+export const createGet = (req: Request, res: Response) => {
+  res.render('authors/create', {
+    title: 'Create Author',
+  });
+};
 
-export const authorCreatePost = [
-    // body('first_name').trim().isLength({ min: 1 }).escape().withMessage('empty_first_name'),
-    // body('family_name').trim().isLength({ min: 1 }).escape().withMessage('empty_family_name'),
-    // body('date_of_birth').optional({ checkFalsy: true }).isISO8601().toDate().withMessage('invalid_date_of_birth'),
-    // body('date_of_death').optional({ checkFalsy: true }).isISO8601().toDate().withMessage('invalid_date_of_death'),
+export const createPost = async (req: Request, res: Response) => {
+  try {
+    const { fullname, dateOfBirth } = req.body;
+    let avatarUrl = '';
+
+    if (req.file) {
+      avatarUrl = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'songs', req.file.mimetype);
+    } 
+
+    try {
+      const author = await createAuthor({ fullname, avatar: avatarUrl, dateOfBirth: new Date(dateOfBirth) });
+      res.redirect(`/authors/${author.id}`);
+    } catch (authorError) {
+      throw new Error('Error creating author');
+    }
+  } catch (error) {
+    res.status(500).send(`Error creating author: ${error.message}`);
+  }
+};
+
+export const updateGet = async (req: Request, res: Response) => {
+  try {
+    const author = (req as any).author;
+    res.render('authors/update', {
+      title: 'Update Author',
+      author,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching author');
+  }
+};
+
+export const updatePost = async (req: Request, res: Response) => {
+  try {
+    const authorId = parseInt(req.params.id, 10);
+    const { fullname, dateOfBirth } = req.body;
+    let avatarUrl = '';
     
-    // asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    //   const errors = validationResult(req);
-    //   if (!errors.isEmpty()) {
-    //     const errorMessages = errors.array().map(error => req.t(`error_messages.${error.msg}`)).join(' ');
-    //     req.flash('error_msg', errorMessages);
-    //     return res.redirect('/authors/create');
-    //   } else {
-    //     const { first_name, family_name, date_of_birth, date_of_death } = req.body;
-    //     try {
-    //       await createAuthor({ first_name, family_name, date_of_birth, date_of_death });
-    //       req.flash('success_msg', req.t('notlist.authorCreateSuccess'));
-    //       return res.redirect('/authors');
-    //     } catch (err) {
-    //       req.flash('error_msg', req.t('error_messages.author_create_error'));
-    //       return res.redirect('/authors/create');
-    //     }
-    //   }
-    // })
-  ];
-  
+    if (req.file) {
+      avatarUrl = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'songs', req.file.mimetype);
+    } 
 
-  export const authorDeleteGet = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const id = parseInt(req.params.id, 10);
-//         if (isNaN(id)) {
-//             req.flash('error_msg', req.t('error.invalidAuthorId'));
-//             return res.redirect('/authors');
-//         }
+    const author = await updateAuthor(authorId, { fullname, avatar: avatarUrl, dateOfBirth: new Date(dateOfBirth) });
+    res.redirect(`/authors/${author.id}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating author');
+  }
+};
 
-//         const author = await getAuthorById(id);
-//         if (!author) {
-//             req.flash('error_msg', req.t('error.failedToFetchAuthors'));
-//             return res.redirect('/authors');
-//         }
+export const deleteGet = async (req: Request, res: Response) => {
+  try {
+    const author = (req as any).author;
+    res.render('authors/delete', {
+      title: 'Delete Author',
+      author,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching author');
+  }
+};
 
-//         res.render('authors/delete', { title: req.t('delete_author_title'), author });
-//     } catch (error) {
-//         req.flash('error_msg', req.t('error.failedToFetchAuthors'));
-//         return res.redirect('/authors');
-//     }
-});
-
-
-export const authorDeletePost = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const id = parseInt(req.body.authorid, 10);
-//         if (isNaN(id)) {
-//             req.flash('error_msg', req.t('error.invalidAuthorId'));
-//             return res.redirect('/authors');
-//         }
-
-//         const author = await getAuthorById(id);
-//         if (!author) {
-//             req.flash('error_msg', req.t('error.failedToFetchAuthors'));
-//             return res.redirect('/authors');
-//         }
-//     } catch (error) {
-//         console.error('Error deleting author:', error.message);
-//         req.flash('error_msg', req.t('error.deleteFail'));
-//         return res.redirect('/authors');
-//     }
-});
-
-export const authorUpdate = (req: Request, res: Response): void => {
-    // const authorId = req.params.id;
-    // res.send(`NOT IMPLEMENTED: Author update: ${authorId}`);
+export const deletePost = async (req: Request, res: Response) => {
+  try {
+    const authorId = parseInt(req.params.id, 10);
+    await deleteAuthor(authorId);
+    res.redirect('/authors');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error deleting author');
+  }
 };

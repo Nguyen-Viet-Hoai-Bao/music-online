@@ -1,0 +1,37 @@
+//- views/songs/create.pug
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1 Create New Song
+    form(action="/musics/create" method="POST" enctype="multipart/form-data")
+      .form-group
+        label(for="title") Title
+        input#title.form-control(type="text" name="title" required)
+
+      .form-group
+        label(for="artist") Artist
+        select#artist.form-control(name="artist" required)
+          each author in authors
+            option(value=author.id) #{author.fullname}
+
+      .form-group
+        label(for="lyrics") Lyrics
+        textarea#lyrics.form-control(name="lyrics" rows="7" style="overflow-y: auto;" required)
+
+      .form-group
+        label(for="image") Image
+        input#image.form-control(type="file" name="image" accept="image/*")
+
+      .form-group
+        label(for="song") Song File
+        input#song.form-control(type="file" name="song" accept=".mp3" required)
+
+      .form-group
+        label(for="status") Status
+        select#status.form-control(name="status")
+          option(value="Suggesting") Suggesting
+          option(value="Publish" selected) Publish
+          option(value="Reject") Reject
+
+      button.btn.btn-primary(type="submit") Create Song

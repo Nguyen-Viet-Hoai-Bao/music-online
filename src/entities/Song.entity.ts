@@ -11,54 +11,54 @@ import { SongStatus } from '../enums/SongStatus.enum';
 @Entity()
 export class Song extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ nullable: false })
-  title!: string;
+  title: string;
 
   @Column({ nullable: false })
-  artist!: string;
+  artist: string;
 
   @Column('text')
-  lyrics!: string;
+  lyrics: string;
 
   @Column()
-  imageUrl!: string;
+  imageUrl: string;
 
   @Column({ nullable: false })
-  url!: string;
+  url: string;
   
   @Column({
     type: 'enum',
     enum: SongStatus,
     default: SongStatus.Publish, 
   })
-  status!: SongStatus;
+  status: SongStatus;
 
   @ManyToMany(() => Genre, genre => genre.songs)
   @JoinTable() 
-  genres!: Genre[];
+  genres: Genre[];
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt: Date;
 
   @OneToMany(() => Comment, comment => comment.song)
-  comment!: Comment[];
+  comment: Comment[];
 
   @ManyToMany(() => User, user => user.favoriteSongs)
-  favoritedBy!: User[];
+  favoritedBy: User[];
 
   @ManyToMany(() => Playlist, playlist => playlist.songs)
-  playlists!: Playlist[];
+  playlists: Playlist[];
 
   @ManyToOne(() => Album, album => album.songs)
-  album!: Album;
+  album: Album;
 
   @ManyToOne(() => Author, author => author.songs)
-  author!: Author;
+  author: Author;
 
   @OneToOne(() => SuggestedSong, suggestedSong => suggestedSong.song)
   suggestedSong?: SuggestedSong;
@@ -68,33 +68,5 @@ export class Song extends BaseEntity{
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getTitle(): string {
-    return this.title;
-  }
-
-  getArtist(): string {
-    return this.artist;
-  }
-
-  getLyrics(): string {
-    return this.lyrics;
-  }
-
-  getUrl(): string {
-    return this.url;
-  }
-
-  getStatus(): SongStatus {
-    return this.status;
-  }
-
-  getCreatedAt(): Date {
-    return this.createdAt;
-  }
-
-  getUpdatedAt(): Date {
-    return this.updatedAt;
   }
 }

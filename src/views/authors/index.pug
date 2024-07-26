@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1.my-4= title
+    ul.list-group
+      each author in authors
+        li.list-group-item.d-flex.justify-content-between.align-items-center
+          .d-flex.align-items-center
+            if author.avatar
+              img(src=author.avatar, alt=author.fullname, class='rounded-circle', style='width: 50px; height: 50px; object-fit: cover; margin-right: 15px;')
+            else
+              .bg-secondary.text-white.rounded-circle.d-flex.align-items-center.justify-content-center(style='width: 50px; height: 50px; margin-right: 15px;')
+                | No Image
+            .ml-2
+              a(href=`/authors/${author.id}`, class='text-decoration-none text-dark')
+                h5.mb-1= author.fullname
+              small Date of Birth: #{new Date(author.dateOfBirth).toDateString()}
+    .mt-4
+      a.btn.btn-success(href='/authors/create') Create New Author

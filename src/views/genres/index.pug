@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  div.container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1.my-4 #{title}
+    ul.list-group
+      each genre in genres
+        li.list-group-item.d-flex.justify-content-between.align-items-center
+          div
+            a.text-decoration-none.text-dark(href=`/genres/${genre.id}`)
+              h5.mb-1 #{genre.name}
+            small Name: #{genre.name}
+    div.mt-4
+      a.btn.btn-success(href='/genres/create') Create New Genre

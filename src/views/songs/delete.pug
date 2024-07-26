@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1= title
+    p Bạn có chắc chắn muốn xóa nhạc "#{song.title}" không?
+    form(action=`/musics/${song.id}?_method=DELETE` method='POST')
+      button(type='submit' class='btn btn-danger') Xóa
+      a(href='/musics' class='btn btn-secondary') Quay lại danh sách

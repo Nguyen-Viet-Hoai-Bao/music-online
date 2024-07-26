@@ -6,47 +6,35 @@ import { PlaylistTypes } from '../enums/PlaylistTypes.enum';
 @Entity()
 export class Playlist extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ nullable: false })
-  title!: string;
+  title: string;
 
   @Column()
-  avatar!: string;
+  avatar: string;
 
   @Column({
     type: 'enum',
     enum: PlaylistTypes,
     default: PlaylistTypes.User, 
   })
-  type!: PlaylistTypes;
+  type: PlaylistTypes;
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @ManyToMany(() => Song, song => song.playlists)
   @JoinTable()
-  songs!: Song[];
+  songs: Song[];
 
   @ManyToMany(() => User, user => user.playlists)
-  users!: User[];
+  users: User[];
 
   constructor(data?: Partial<Playlist>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getTitle(): string {
-    return this.title;
-  }
-
-  getType(): PlaylistTypes {
-    return this.type;
-  }
-
-  getCreatedAt(): Date {
-    return this.createdAt;
   }
 }

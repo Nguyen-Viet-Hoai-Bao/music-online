@@ -5,65 +5,33 @@ import { Author } from './Author.entity';
 @Entity()
 export class Album extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ nullable: false })
-  title!: string;
+  title: string;
 
   @Column()
-  imageUrl!: string;
+  imageUrl: string;
 
   @Column()
-  releaseDate!: Date;
+  releaseDate: Date;
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt: Date;
 
   @OneToMany(() => Song, song => song.album)
-  songs!: Song[];
+  songs: Song[];
 
   @ManyToOne(() => Author, author => author.albums)
-  author!: Author;
+  author: Author;
 
   constructor(data?: Partial<Album>){
     super();
     if(data){
       Object.assign(this, data);
     }
-  }
-
-  getId(): number {
-    return this.id;
-  }
-
-  getTitle(): string {
-    return this.title;
-  }
-
-  getImageUrl(): string {
-    return this.imageUrl;
-  }
-
-  getReleaseDate(): Date {
-    return this.releaseDate;
-  }
-
-  getCreatedAt(): Date {
-    return this.createdAt;
-  }
-
-  getUpdatedAt(): Date {
-    return this.updatedAt;
-  }
-
-  getSongs(): Song[] {
-    return this.songs;
-  }
-
-  getAuthor(): Author {
-    return this.author;
   }
 }
