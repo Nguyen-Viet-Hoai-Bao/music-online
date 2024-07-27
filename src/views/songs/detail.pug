@@ -1,21 +1,51 @@
+//- extends ../layout
+
+//- block content
+//-   .container
+//-     .row
+//-       .col-12
+//-         h1.card-title= song.title
+
+//-     .row
+//-       .col-md-6
+//-         .card
+//-           img.card-img-top(src=song.imageUrl alt="Song Image")
+//-           .card-body
+//-             h2.card-title= song.title
+//-             p.card-text
+//-               | Artist: 
+//-               b= song.artist
+//-             p.card-text
+//-               | Lyrics:
+//-               pre.card-text(style="color: #e5e5e5")= song.lyrics
+//-       .col-md-6
+//-         .card
+//-           .card-body
+//-             h3= "Listen to the Song"
+//-             button.btn.btn-primary(type="button" onclick=`updateAudioPlayer("${song.url}")`) Play
+
 extends ../layout
 
 block content
-  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
-    h1= title
-    ul.list-group
-      li.list-group-item
-        h4 Tiêu Đề: #{song.title}
-      li.list-group-item
-        h4 Nghệ Sĩ: #{song.artist}
-      li.list-group-item
-        h4 Lời Bài Hát: 
-        p #{song.lyrics}
-      if song.url
-        li.list-group-item
-          h4 Tệp Nhạc:
-          a(href=song.url class='btn btn-success') Tải về
-    div
-      a(href=`/musics/update/${song.id}` class='btn btn-warning btn-sm') Sửa
-      a(href=`/musics/delete/${song.id}` class='btn btn-danger btn-sm') Xóa
-      a(href='/musics' class='btn btn-secondary') Quay lại danh sách
+  .container
+    .row
+      .col-12
+        h1.card-title= song.title
+
+    .row
+      .col-md-6
+        .card
+          img.card-img-top(src=song.imageUrl alt="Song Image")
+          .card-body
+            h2.card-title= song.title
+            p.card-text
+              | Artist: 
+              b= song.artist
+            p.card-text
+              | Lyrics:
+              pre.card-text(style="color: #e5e5e5")= song.lyrics
+      .col-md-6
+        .card
+          .card-body
+            h3= "Listen to the Song"
+            button.btn.btn-primary(type="button" onclick=`updateAudioPlayer("${song.url}")`) Play
