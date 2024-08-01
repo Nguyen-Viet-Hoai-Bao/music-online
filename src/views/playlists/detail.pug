@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1= playlist.title
+    .row
+      .col-md-4
+        if playlist.avatar
+          img(src=playlist.avatar, alt=playlist.title, class='img-fluid rounded')
+        else
+          .bg-secondary.text-white.text-center.d-flex.align-items-center.justify-content-center(style='width: 100%; height: 300px;')
+            | No Image
+      .col-md-8
+        p
+          strong Type:
+          | #{playlist.type}
+        p
+          strong Created At:
+          | #{new Date(playlist.createdAt).toDateString()}
+        p
+          strong Songs:
+          ul
+            each song in playlist.songs
+              li= song.title
+    .mt-4
+      a.btn.btn-primary(href=`/playlists/update/${playlist.id}`) Edit
+      a.btn.btn-danger(href=`/playlists/delete/${playlist.id}`) Delete
+      a.btn.btn-success(href='/playlists') Playlist List

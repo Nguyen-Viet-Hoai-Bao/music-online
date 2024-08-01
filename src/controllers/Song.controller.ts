@@ -74,7 +74,7 @@ export const createPost = async (req: Request, res: Response) => {
         }
 
         const song = await createSong({ title, artist, lyrics, imageUrl, url, status });
-        res.redirect(`/songs/${song.id}`);
+        res.redirect(`/musics/${song.id}`);
     } catch (error) {
         req.flash('error_msg', 'Failed to create song');
         res.status(500).send(`Error creating song: ${error.message}`);
