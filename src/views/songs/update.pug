@@ -3,21 +3,39 @@ extends ../layout
 block content
   .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
     h1= title
-    form(action=`/musics/${song.id}?_method=PUT` method='POST' enctype='multipart/form-data')
-      div.form-group
+    form(action=`/musics/update/${song.id}` method='POST' enctype='multipart/form-data')
+      .form-group
         label(for='title') Tiêu Đề
         input(type='text' id='title' name='title' class='form-control' value=song.title required)
-      div.form-group
-        label(for='artist') Nghệ Sĩ
-        input(type='text' id='artist' name='artist' class='form-control' value=song.artist required)
-      div.form-group
+      
+      .form-group
+        label(for="artist") Artist
+        select#artist.form-control(name="artist" required)
+          each author in authors
+            option(value=author.fullname selected=author.fullname === song.artist)= author.fullname
+
+      .form-group
         label(for='lyrics') Lời Bài Hát
         textarea(id='lyrics' name='lyrics' class='form-control' required)= song.lyrics
-      div.form-group
-        label(for='status') Trạng Thái
-        input(type='text' id='status' name='status' class='form-control' value=song.status required)
-      div.form-group
-        label(for='file') Tệp Nhạc
-        input(type='file' id='file' name='file' class='form-control')
+      
+      .form-group
+        label(for="status") Status
+        select#status.form-control(name="status" required)
+          option(value="Suggesting" selected=song.status === 'Suggesting') Suggesting
+          option(value="Publish" selected=song.status === 'Publish') Publish
+          option(value="Reject" selected=song.status === 'Reject') Reject
+
+      .form-group
+        label(for="image") Image
+        input#image.form-control(type="file" name="image" accept="image/*")
+        if song.imageUrl
+          img(src=song.imageUrl, alt='Current Avatar', width='100')
+
+      .form-group
+        label(for="song") Song File
+        input#song.form-control(type="file" name="song" accept=".mp3" required)
+        if song.url
+          img(src=song.url, alt='Current Avatar', width='100')
+
       button(type='submit' class='btn btn-primary') Cập Nhật Nhạc
       a(href=`/musics/${song.id}` class='btn btn-secondary') Quay lại chi tiết

@@ -1,29 +1,3 @@
-//- extends ../layout
-
-//- block content
-//-   .container
-//-     .row
-//-       .col-12
-//-         h1.card-title= song.title
-
-//-     .row
-//-       .col-md-6
-//-         .card
-//-           img.card-img-top(src=song.imageUrl alt="Song Image")
-//-           .card-body
-//-             h2.card-title= song.title
-//-             p.card-text
-//-               | Artist: 
-//-               b= song.artist
-//-             p.card-text
-//-               | Lyrics:
-//-               pre.card-text(style="color: #e5e5e5")= song.lyrics
-//-       .col-md-6
-//-         .card
-//-           .card-body
-//-             h3= "Listen to the Song"
-//-             button.btn.btn-primary(type="button" onclick=`updateAudioPlayer("${song.url}")`) Play
-
 extends ../layout
 
 block content
@@ -48,4 +22,10 @@ block content
         .card
           .card-body
             h3= "Listen to the Song"
-            button.btn.btn-primary(type="button" onclick=`updateAudioPlayer("${song.url}")`) Play
+            button.btn.btn-primary(type="button" data-toggle="modal" data-target="#audioPlayerModal" onclick=`updateAudioPlayer("${song.url}")`) Play
+        .card
+          .card-body
+            h3= "More Actions"
+            a.btn.btn-primary(href=`/musics/update/${song.id}`) Edit
+            a.btn.btn-danger(href=`/musics/delete/${song.id}`) Delete
+            a.btn.btn-success(href='/musics') Author List

@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { uploadFileToFirebase } from '../utils/fileUpload.util';
 import { createSong, deleteSong, getAllSongs, getSongById, updateSong } from '@src/services/Song.service';
 import { getAuthors } from '@src/services/Author.service';
+import { Song } from '@src/entities/Song.entity';
 
 export const validateAndFetchSong = async (req: Request, res: Response, next: NextFunction) => {
     const id = parseInt(req.params.id, 10);
@@ -82,10 +83,12 @@ export const createPost = async (req: Request, res: Response) => {
 
 export const updateGet = asyncHandler(async (req: Request, res: Response) => {
     try {
+        const authors = await getAuthors(); 
         const song = (req as any).song;
         res.render('songs/update', {
             title: 'Update Song',
             song,
+            authors,
         });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch song');
@@ -96,22 +99,40 @@ export const updateGet = asyncHandler(async (req: Request, res: Response) => {
 export const updatePost = async (req: Request, res: Response) => {
     const songId = parseInt(req.params.id, 10);
     const { title, artist, lyrics, status } = req.body;
-    let imageUrl = '';
-    let url = '';
+
+    const currentSong = await getSongById(songId);
+    if (!currentSong) {
+        req.flash('error_msg', 'Song not found');
+        return res.status(404).send('Song not found');
+    }
+
+    let imageUrl = currentSong.imageUrl;
+    let url = currentSong.url;
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     try {
-        if (req.file) {
-            if (req.file.fieldname === 'image') {
-              imageUrl = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'images', req.file.mimetype);
-            }
-    
-            if (req.file.fieldname === 'song') {
-              url = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'songs', req.file.mimetype);
-            }
-          }
+        if (files && files['image'] && files['image'][0]) {
+            const image = files['image'][0];
+            imageUrl = await uploadFileToFirebase(image.buffer, image.originalname, 'musics/images', image.mimetype);
+        }
 
-        const updatedSong = await updateSong(songId, { title, artist, lyrics, imageUrl, url, status });
-        res.redirect(`/songs/${updatedSong.id}`);
+        if (files && files['song'] && files['song'][0]) {
+            const songFile = files['song'][0];
+            url = await uploadFileToFirebase(songFile.buffer, songFile.originalname, 'musics/songs', songFile.mimetype);
+        }
+
+        const updatedData: Partial<Song> = {};
+        if (title !== currentSong.title) updatedData.title = title;
+        if (artist !== currentSong.artist) updatedData.artist = artist;
+        if (lyrics !== currentSong.lyrics) updatedData.lyrics = lyrics;
+        if (status !== currentSong.status) updatedData.status = status;
+        if (imageUrl !== currentSong.imageUrl) updatedData.imageUrl = imageUrl;
+        if (url !== currentSong.url) updatedData.url = url;
+
+        const updatedSong = await updateSong(songId, updatedData);
+
+        res.redirect(`/musics/${updatedSong.id}`);
     } catch (error) {
         req.flash('error_msg', 'Failed to update song');
         res.status(500).send(`Error updating song: ${error.message}`);
@@ -121,7 +142,7 @@ export const updatePost = async (req: Request, res: Response) => {
 export const deleteGet = asyncHandler(async (req: Request, res: Response) => {
     try {
         const song = (req as any).song;
-        res.render('songs/delete', {
+        res.render('musics/delete', {
             title: 'Delete Song',
             song,
         });
@@ -135,7 +156,7 @@ export const deletePost = asyncHandler(async (req: Request, res: Response) => {
     try {
         const songId = parseInt(req.params.id, 10);
         await deleteSong(songId);
-        res.redirect('/songs');
+        res.redirect('/musics');
     } catch (error) {
         req.flash('error_msg', 'Failed to delete song');
         res.status(500).send(`Error deleting song: ${error.message}`);
