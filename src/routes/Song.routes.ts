@@ -7,11 +7,11 @@ const router = Router();
 router.get('/create', createGet);
 router.post('/create', uploadMedia, createPost);
 
-router.get('/:id/edit', validateAndFetchSong, updateGet);
-router.post('/:id/edit', uploadMedia, updatePost);
+router.get('/update/:id', validateAndFetchSong, updateGet);
+router.post('/update/:id', uploadMedia, updatePost);
 
-router.get('/:id/delete', validateAndFetchSong, deleteGet);
-router.post('/:id/delete', deletePost);
+router.get('/delete/:id', validateAndFetchSong, deleteGet);
+router.post('/delete/:id', deletePost);
 
 router.get('/', list);
 router.get('/:id', validateAndFetchSong, detail);
