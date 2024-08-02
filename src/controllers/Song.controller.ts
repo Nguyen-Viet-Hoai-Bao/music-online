@@ -142,7 +142,7 @@ export const updatePost = async (req: Request, res: Response) => {
 export const deleteGet = asyncHandler(async (req: Request, res: Response) => {
     try {
         const song = (req as any).song;
-        res.render('musics/delete', {
+        res.render('songs/delete', {
             title: 'Delete Song',
             song,
         });
