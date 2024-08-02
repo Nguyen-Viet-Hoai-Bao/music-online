@@ -1,0 +1,145 @@
+import { Playlist } from './../entities/Playlist.entity';
+import { Request, Response, NextFunction } from 'express';
+import asyncHandler from 'express-async-handler';
+import { uploadFileToFirebase } from '../utils/fileUpload.util';
+import { createPlaylist, deletePlaylist, getAllPlaylists, getPlaylistById, updatePlaylist } from '@src/services/Playlist.service';
+import { getAllSongs, getSongsByIds } from '@src/services/Song.service';
+import { PlaylistTypes } from '@src/enums/PlaylistTypes.enum';
+
+export const validateAndFetchPlaylist = async (req: Request, res: Response, next: NextFunction) => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+        req.flash('error_msg', req.t('notlist.invalidPlaylistId'));
+        return res.redirect('/error');
+    }
+    try {
+        const playlist = await getPlaylistById(id);
+        if (playlist === null) {
+            req.flash('error_msg', req.t('notlist.PlaylistNotFound'));
+            return res.redirect('/error');
+        }
+        (req as any).playlist = playlist;
+        next();
+    } catch (error) {
+        req.flash('error_msg', 'Failed to fetch Playlist');
+        res.redirect('/error');
+    }
+};
+
+export const list = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlists = await getAllPlaylists();
+        res.render('playlists/index', { playlists, title: 'List Playlists' });
+    } catch (error) {
+        req.flash('error_msg', 'Failed to fetch Playlists');
+        res.redirect('/error');
+    }
+});
+
+export const detail = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlist = (req as any).playlist;
+        res.render('playlists/detail', { playlist, title: 'Playlist Detail' });
+    } catch (error) {
+        req.flash('error_msg', 'Failed to fetch Playlist');
+        res.redirect('/error');
+    }
+});
+
+export const createGet = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      const songs = await getAllSongs();
+      const playlistTypes = Object.values(PlaylistTypes);
+
+      res.render('playlists/create', { songs, playlistTypes, title: 'Create New Playlist' });
+    } catch (error) {
+      req.flash('error_msg', 'Failed to fetch authors');
+      res.redirect('/error');
+    }
+  });
+
+export const createPost = async (req: Request, res: Response) => {
+    try {
+        const { title, songIds, type  } = req.body;
+        const songs = await getSongsByIds(songIds);
+
+        let avatarUrl = '';
+
+        if (req.file) {
+            avatarUrl = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'playlist', req.file.mimetype);
+          } 
+
+        const playlist = await createPlaylist({title, avatar: avatarUrl, songs, type });
+
+        res.redirect(`/playlists/${playlist.id}`);
+    } catch (error) {
+        req.flash('error_msg', 'Failed to create Playlist');
+        res.status(500).send(`Error creating Playlist: ${error.message}`);
+    }
+};
+
+export const updateGet = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlist = (req as any).playlist;
+        const songs = await getAllSongs();
+
+        res.render('playlists/update', {
+            title: 'Update Playlist',
+            playlist,
+            songs,
+        });
+    } catch (error) {
+        req.flash('error_msg', 'Failed to fetch Playlist');
+        res.status(500).send('Error fetching Playlist');
+    }
+});
+
+export const updatePost = async (req: Request, res: Response) => {
+    try{
+        const playlistId = parseInt(req.params.id, 10);
+        const { title, songIds, type } = req.body;
+
+        let avatarUrl = '';
+
+        if (req.file) {
+            avatarUrl = await uploadFileToFirebase(req.file.buffer, req.file.originalname, 'playlists', req.file.mimetype);
+        } 
+
+        const updatedData: Partial<Playlist> = {
+            title,
+            avatar: avatarUrl,
+            songs: await getSongsByIds(songIds),
+            type
+        };
+        const updatedPlaylist = await updatePlaylist(playlistId, updatedData);
+
+        res.redirect(`/playlist/${updatedPlaylist.id}`);
+    } catch (error) {
+        req.flash('error_msg', 'Failed to update Playlist');
+        res.status(500).send(`Error updating Playlist: ${error.message}`);
+    }
+};
+
+export const deleteGet = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlist = (req as any).playlist;
+        res.render('playlist/delete', {
+            title: 'Delete Playlist',
+            playlist,
+        });
+    } catch (error) {
+        req.flash('error_msg', 'Failed to fetch Playlist');
+        res.status(500).send('Error fetching Playlist');
+    }
+});
+
+export const deletePost = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlistId = parseInt(req.params.id, 10);
+        await deletePlaylist(playlistId);
+        res.redirect('/playlist');
+    } catch (error) {
+        req.flash('error_msg', 'Failed to delete Playlist');
+        res.status(500).send(`Error deleting Playlist: ${error.message}`);
+    }
+});

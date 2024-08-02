@@ -74,7 +74,7 @@ export const createPost = async (req: Request, res: Response) => {
         }
 
         const song = await createSong({ title, artist, lyrics, imageUrl, url, status });
-        res.redirect(`/songs/${song.id}`);
+        res.redirect(`/musics/${song.id}`);
     } catch (error) {
         req.flash('error_msg', 'Failed to create song');
         res.status(500).send(`Error creating song: ${error.message}`);
@@ -142,7 +142,7 @@ export const updatePost = async (req: Request, res: Response) => {
 export const deleteGet = asyncHandler(async (req: Request, res: Response) => {
     try {
         const song = (req as any).song;
-        res.render('musics/delete', {
+        res.render('songs/delete', {
             title: 'Delete Song',
             song,
         });

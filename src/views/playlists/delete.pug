@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
+    h1 Delete Playlist
+    p Are you sure you want to delete the playlist: #{playlist.title}?
+    form(action=`/playlists/delete/${playlist.id}`, method='post')
+      button.btn.btn-danger(type='submit') Delete
+      a.btn.btn-secondary(href='/playlists') Cancel
