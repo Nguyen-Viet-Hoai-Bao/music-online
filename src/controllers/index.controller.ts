@@ -1,13 +1,13 @@
+import { getAllSongs } from '@src/services/Song.service';
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 
 export const index = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const tracks = [
-      { title: 'Track 1', artist: 'Artist 1', image: 'https://via.placeholder.com/150' },
-      { title: 'Track 2', artist: 'Artist 2', image: 'https://via.placeholder.com/150' },
-      { title: 'Track 3', artist: 'Artist 3', image: 'https://via.placeholder.com/150' },
-      { title: 'Track 4', artist: 'Artist 4', image: 'https://via.placeholder.com/150' },
-      { title: 'Track 5', artist: 'Artist 5', image: 'https://via.placeholder.com/150' }
-  ];
-  res.render('index', { tracks });
-  });
+  try {
+    const songs = await getAllSongs();
+    res.render('songs/index', { songs, title: 'List Songs' });
+  } catch (error) {
+      req.flash('error_msg', 'Failed to fetch songs');
+      res.redirect('/error');
+  }
+});

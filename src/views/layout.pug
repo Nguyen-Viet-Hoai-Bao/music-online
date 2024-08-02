@@ -121,18 +121,18 @@ html(lang="en")
       .sidebar
         ul.nav.flex-column
           li.nav-item.active
-            a.nav-link(href="/") Home
+            a.nav-link(href="/" data-page="home") Home
               span.sr-only (current)
           li.nav-item
-            a.nav-link(href="/authors") Authors
+            a.nav-link(href="/authors" data-page="authors") Authors
           li.nav-item
-            a.nav-link(href="/genres") Genres
+            a.nav-link(href="/genres" data-page="genres") Genres
           li.nav-item
-            a.nav-link(href="/musics") Songs
+            a.nav-link(href="/musics" data-page="musics") Songs
           li.nav-item
-            a.nav-link(href="/playlists") Playlists
+            a.nav-link(href="/playlists" data-page="playlists") Playlists
           li.nav-item
-            a.nav-link(href="#") Library
+            a.nav-link(href="#" data-page="library") Library
           li.nav-item
             #{t('sidebar.vietnamese')}
 
@@ -256,4 +256,44 @@ html(lang="en")
         audioPlayer.addEventListener('timeupdate', updateTime);
 
         loadPlayerState();
+
+        // Handle AJAX content loading and preserve the footer
+        document.querySelectorAll('a[data-page]').forEach(anchor => {
+          anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+
+            fetch(url)
+              .then(response => response.text())
+              .then(html => {
+                const newContent = document.createElement('div');
+                newContent.innerHTML = html;
+
+                // Preserve footer and update only the main content
+                const newMainContent = newContent.querySelector('.container').innerHTML;
+                const currentMainContent = document.querySelector('.container');
+                currentMainContent.innerHTML = newMainContent;
+
+                window.history.pushState({ path: url }, '', url);
+              })
+              .catch(error => console.error('Error loading page:', error));
+          });
+        });
+
+        window.addEventListener('popstate', (e) => {
+          if (e.state && e.state.path) {
+            fetch(e.state.path)
+              .then(response => response.text())
+              .then(html => {
+                const newContent = document.createElement('div');
+                newContent.innerHTML = html;
+
+                // Preserve footer and update only the main content
+                const newMainContent = newContent.querySelector('.container').innerHTML;
+                const currentMainContent = document.querySelector('.container');
+                currentMainContent.innerHTML = newMainContent;
+              })
+              .catch(error => console.error('Error loading page:', error));
+          }
+        });
       });
