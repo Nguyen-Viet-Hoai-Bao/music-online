@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { list, createGet, deleteGet, updatePost, detail, createPost, deletePost, updateGet, validateAndFetchPlaylist } from '../controllers/Playlist.controller';
+import { list, createGet, deleteGet, updatePost, detail, createPost, deletePost, updateGet, validateAndFetchPlaylist, addSongPost, removeSongPost } from '../controllers/Playlist.controller';
 import { uploadAvatar } from './middlewares/multer.config'
 
 const router = Router();
@@ -14,6 +14,9 @@ router.post('/delete/:id', deletePost);
 
 router.get('/update/:id', validateAndFetchPlaylist, updateGet);
 router.post('/update/:id', uploadAvatar, updatePost);
+
+router.post('/add-song/:id', addSongPost);
+router.post('/remove-song/:id', removeSongPost);
 
 router.get('/:id', validateAndFetchPlaylist, detail);
 

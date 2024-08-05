@@ -2,7 +2,7 @@ import { Playlist } from './../entities/Playlist.entity';
 import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import { uploadFileToFirebase } from '../utils/fileUpload.util';
-import { createPlaylist, deletePlaylist, getAllPlaylists, getPlaylistById, updatePlaylist } from '@src/services/Playlist.service';
+import { addSongToPlaylist, createPlaylist, deletePlaylist, getAllPlaylists, getPlaylistById, removeSongFromPlaylist, updatePlaylist } from '@src/services/Playlist.service';
 import { getAllSongs, getSongsByIds } from '@src/services/Song.service';
 import { PlaylistTypes } from '@src/enums/PlaylistTypes.enum';
 
@@ -39,10 +39,38 @@ export const list = asyncHandler(async (req: Request, res: Response) => {
 export const detail = asyncHandler(async (req: Request, res: Response) => {
     try {
         const playlist = (req as any).playlist;
-        res.render('playlists/detail', { playlist, title: 'Playlist Detail' });
+        const songs = await getAllSongs();
+        const playlistSongIds = playlist.songs.map((song: any) => song.id);
+        const availableSongs = songs.filter((song: any) => !playlistSongIds.includes(song.id));
+        res.render('playlists/detail', { playlist, title: 'Playlist Detail', songs: playlist.songs, availableSongs });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch Playlist');
         res.redirect('/error');
+    }
+});
+
+export const addSongPost = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const playlistId = parseInt(req.params.id, 10);
+        const { songId } = req.body;
+
+        await addSongToPlaylist(playlistId, songId);
+        res.redirect(`/playlists/${playlistId}`);
+    } catch (error) {
+        req.flash('error_msg', 'Failed to add song to Playlist');
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+export const removeSongPost = asyncHandler(async (req: Request, res: Response) => {
+    try {
+      const playlistId = parseInt(req.params.id, 10);
+      const { songId } = req.body;
+      await removeSongFromPlaylist(playlistId, Number(songId));
+      res.redirect(`/playlists/${playlistId}`);
+    } catch (error) {
+      req.flash('error_msg', 'Failed to remove song from Playlist');
+      res.status(500).json({ success: false, message: error.message });
     }
 });
 
