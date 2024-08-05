@@ -1,5 +1,6 @@
 import { AppDataSource } from '../config/data-source';
 import { Playlist } from '../entities/Playlist.entity';
+import { getSongById } from './Song.service';
 
 const playlistRepository = AppDataSource.getRepository(Playlist);
 
@@ -28,6 +29,51 @@ export const createPlaylist = async (data: Partial<Playlist>) => {
     throw new Error('Error creating Playlist');
   }
 }
+
+export const addSongToPlaylist = async (playlistId: number, songId: number) => {
+  const playlist = await playlistRepository.findOne({
+    where: { id: playlistId }, 
+    relations: ['songs']
+  });
+  if (!playlist) {
+    throw new Error('Playlist not found');
+  }
+  
+  const song = await getSongById(songId);
+  if (!song) {
+    throw new Error('Song not found');
+  }
+  
+  if (!playlist.songs) {
+    playlist.songs = [];
+  }
+  
+  playlist.songs.push(song);
+  await playlist.save();
+};
+  
+export const removeSongFromPlaylist = async (playlistId: number, songId: number) => {
+  const playlist = await playlistRepository.findOne({
+    where: { id: playlistId },
+    relations: ['songs']
+  });
+
+  if (!playlist) {
+    throw new Error('Playlist not found');
+  }
+  
+  if (!playlist.songs) {
+    playlist.songs = [];
+  }
+  const songExists = playlist.songs.some(s => s.id === songId);
+  if (!songExists) {
+    throw new Error('Song not found in playlist');
+  }
+  
+  playlist.songs = playlist.songs.filter(s => s.id !== songId);
+  await playlist.save();
+};
+
 
 export const updatePlaylist = async (playlistId: number, data: Partial<Playlist>) => {
   try {

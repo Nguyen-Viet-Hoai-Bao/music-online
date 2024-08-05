@@ -43,8 +43,39 @@ block content
               small: = song.artist  
               | &nbsp;
               small : #{new Date(song.createdAt).toDateString()}
-          button.btn.btn-primary(type="button" data-toggle="modal" data-target="#audioPlayerModal" onclick=`updateAudioPlayer("${song.url}")`) Play
+          .mt-4
+            button.btn.btn-primary(type="button" data-toggle="modal" data-target="#audioPlayerModal" onclick=`updateAudioPlayer("${song.url}")`) Play
+            form(action=`/playlists/remove-song/${playlist.id}`, method='post', style='display: inline;')
+              input(type='hidden', name='songId', value=song.id)
+              button.btn.btn-danger(type='submit') Remove
 
 
-    .mt-4
-      a.btn.btn-success(href='/musics/create') Add Song
+    h1.text-center.mt-4
+      button.btn.btn-info(type="button", data-toggle="modal", data-target="#findMoreModal") Find More
+
+    .modal.fade(id='findMoreModal', tabindex='-1', role='dialog')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h5.modal-title Find More Songs
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+            ul.list-group
+              each song in availableSongs
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  .d-flex.align-items-center
+                    if song.imageUrl
+                      img(src=song.imageUrl, alt=song.title, class='rounded-circle', style='width: 50px; height: 50px; object-fit: cover; margin-right: 15px;')
+                    else
+                      .bg-secondary.text-white.rounded-circle.d-flex.align-items-center.justify-content-center(style='width: 50px; height: 50px; margin-right: 15px;')
+                        | No Image
+                    .ml-2
+                      a(href=`/musics/${song.id}`, class='text-decoration-none text-dark')
+                        h5.mb-1= song.title
+                      small: = song.artist  
+                      | &nbsp;
+                      small : #{new Date(song.createdAt).toDateString()}
+                  form(action=`/playlists/add-song/${playlist.id}`, method='post', style='display: inline;')
+                    input(type='hidden', name='songId', value=song.id)
+                    button.btn.btn-success(type='submit') Add
