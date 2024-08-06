@@ -4,6 +4,7 @@ block content
   .container(style='background-color: #f8f9fa; color: #1db954; padding: 2rem;')
     div.container
       h1.my-4 #{genre.name}
+      h1.my-4 Số lượng bài hát: #{countSong}
       div.mt-4
         a.btn.btn-primary(href=`/genres/update/${genre.id}`) Edit
         a.btn.btn-danger(href=`/genres/delete/${genre.id}`) Delete
