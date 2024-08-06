@@ -28,6 +28,14 @@ export const getSongsByIds = async (songIds: number[]) => {
   }
 };
 
+export const countSongsByGenreId = async (genreId: number) => {
+  try {
+    return await songRepository.count({ where: { genres: { id: genreId } } });
+  } catch (error) {
+    throw new Error('Error counting songs by genre');
+  }
+};
+
 export const createSong = async (data: Partial<Song>) => {
   try {
     const song = new Song(data);

@@ -22,6 +22,9 @@ block content
         p
           strong Created At:
           | #{new Date(playlist.createdAt).toDateString()}
+        p
+          strong Num of songs:
+          | #{length}
         .mt-4
           a.btn.btn-primary(href=`/playlists/update/${playlist.id}`) Edit
           a.btn.btn-danger(href=`/playlists/delete/${playlist.id}`) Delete

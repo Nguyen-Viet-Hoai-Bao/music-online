@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import { createGenre, deleteGenre, getGenreById, getGenres, updateGenre } from '../services/Genre.service';
+import { countSongsByGenreId } from '@src/services/Song.service';
 
 export async function validateAndFetchGenre(req: Request, res: Response, next: NextFunction) {
     const id = parseInt(req.params.id);
@@ -30,7 +31,8 @@ export const list = asyncHandler(async (req: Request, res: Response, next: NextF
 export const detail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const genre = (req as any).genre;
-        res.render('genres/detail', { genre, title: 'Genre Detail' });
+        const countSong = await countSongsByGenreId(genre.id);
+        res.render('genres/detail', { genre, countSong, title: 'Genre Detail' });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch genre');
         res.redirect('/error');

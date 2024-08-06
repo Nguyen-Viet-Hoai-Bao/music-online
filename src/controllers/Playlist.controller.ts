@@ -42,7 +42,7 @@ export const detail = asyncHandler(async (req: Request, res: Response) => {
         const songs = await getAllSongs();
         const playlistSongIds = playlist.songs.map((song: any) => song.id);
         const availableSongs = songs.filter((song: any) => !playlistSongIds.includes(song.id));
-        res.render('playlists/detail', { playlist, title: 'Playlist Detail', songs: playlist.songs, availableSongs });
+        res.render('playlists/detail', { playlist, title: 'Playlist Detail', songs: playlist.songs, availableSongs, length: playlist.songs.length });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch Playlist');
         res.redirect('/error');
@@ -151,9 +151,11 @@ export const updatePost = async (req: Request, res: Response) => {
 export const deleteGet = asyncHandler(async (req: Request, res: Response) => {
     try {
         const playlist = (req as any).playlist;
-        res.render('playlist/delete', {
+        const songs = await getAllSongs();
+        res.render('playlists/delete', {
             title: 'Delete Playlist',
             playlist,
+            songs,
         });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch Playlist');
@@ -165,7 +167,7 @@ export const deletePost = asyncHandler(async (req: Request, res: Response) => {
     try {
         const playlistId = parseInt(req.params.id, 10);
         await deletePlaylist(playlistId);
-        res.redirect('/playlist');
+        res.redirect('/playlists');
     } catch (error) {
         req.flash('error_msg', 'Failed to delete Playlist');
         res.status(500).send(`Error deleting Playlist: ${error.message}`);
