@@ -42,7 +42,15 @@ export const detail = asyncHandler(async (req: Request, res: Response) => {
         const songs = await getAllSongs();
         const playlistSongIds = playlist.songs.map((song: any) => song.id);
         const availableSongs = songs.filter((song: any) => !playlistSongIds.includes(song.id));
-        res.render('playlists/detail', { playlist, title: 'Playlist Detail', songs: playlist.songs, availableSongs, length: playlist.songs.length });
+        const firstSong = playlist.songs.length > 0 ? playlist.songs[0] : null;
+        res.render('playlists/detail', { 
+          playlist, 
+          title: 'Playlist Detail', 
+          songs: playlist.songs, 
+          availableSongs, 
+          length: playlist.songs.length,
+          firstSong
+        });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch Playlist');
         res.redirect('/error');
@@ -109,12 +117,14 @@ export const createPost = async (req: Request, res: Response) => {
 export const updateGet = asyncHandler(async (req: Request, res: Response) => {
     try {
         const playlist = (req as any).playlist;
+        const playlistTypes = Object.values(PlaylistTypes);
         const songs = await getAllSongs();
 
         res.render('playlists/update', {
             title: 'Update Playlist',
             playlist,
             songs,
+            playlistTypes,
         });
     } catch (error) {
         req.flash('error_msg', 'Failed to fetch Playlist');

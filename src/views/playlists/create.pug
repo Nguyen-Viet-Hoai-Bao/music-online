@@ -27,12 +27,5 @@ block content
               input.form-check-input(type='checkbox', id=`song-${song.id}`, name='songIds', value=song.id)
               label.form-check-label(for=`song-${song.id}`) #{song.title}
 
-      div.form-group
-        label(for='selectedSongs') Selected Songs
-        ul#selectedSongsList
-          // List of selected songs will be displayed here if you choose to manage it on the server side
-
-      input(type='hidden', id='songOrder', name='songOrder')
-
       div
         button.btn.btn-primary(type='submit') Create Playlist

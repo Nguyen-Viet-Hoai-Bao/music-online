@@ -18,8 +18,8 @@ block content
         label(for='type') Type
         select.form-control(id='type', name='type', required)
           option(value='') Select Type
-          each type, key in playlistTypes
-            option(value=type selected=playlist.type === type)= key
+          each type in playlistTypes
+            option(value=type, selected=playlist.type === type)= type
 
       div.form-group
         label(for='songs') Songs
