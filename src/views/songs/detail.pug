@@ -22,7 +22,7 @@ block content
         .card
           .card-body
             h3= "Listen to the Song"
-            button.btn.btn-primary(type="button" data-toggle="modal" data-target="#audioPlayerModal" onclick=`updateAudioPlayer("${song.url}")`) Play
+            button.btn.btn-primary(type="button" data-toggle="modal" data-target="#audioPlayerModal" onclick=`updateAudioPlayer("${song.url}"), ${-1}`) Play
         .card
           .card-body
             h3= "More Actions"
