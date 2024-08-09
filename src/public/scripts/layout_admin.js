@@ -11,14 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let isPlaying = false;
   let currentSongIndex = 0;
   let firstSong;
-  let playlistIdTmp = -1;
   //------------------//------------------//------------------//------------------
   const playlistSongs = Array.from(document.querySelectorAll('.playlist-song'));
-  const playlistData = document.getElementById('playlist-data')?.getAttribute('playlist-datas');
+  const playlistData = JSON.parse(document.getElementById('playlist-data')?.getAttribute('playlist-datas'));
 
   if (playlistData) {
-    if(playlistIdTmp!=playlistData.id){
-      playlistIdTmp = playlistData.id;
+    let idTmp = localStorage.getItem('playlistIdTmp');
+    console.log("playlistIdTmp: ", idTmp, " | ", playlistData.id);
+    if(idTmp!=playlistData.id){
+      idTmp = playlistData.id;
+      localStorage.setItem('playlistIdTmp', idTmp);
       firstSong = document.getElementById('first-song')?.getAttribute('data-song-url');
       if(firstSong){
         updateAudioPlayer_a(firstSong);
@@ -125,6 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(savePlayerState, 1000);
 
   audioPlayer.addEventListener('timeupdate', updateTime);
+
+  audioPlayer.addEventListener('ended', () => {
+    if (playlistSongs.length > 0) {
+      currentSongIndex = (currentSongIndex + 1) % playlistSongs.length;
+      const nextSongUrl = playlistSongs[currentSongIndex].getAttribute('data-song-url');
+      updateAudioPlayer(nextSongUrl);
+    }
+  });
 
   loadPlayerState();
 
